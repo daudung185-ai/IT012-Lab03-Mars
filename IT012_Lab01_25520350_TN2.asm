@@ -5,30 +5,25 @@
 # Ho va ten: Đậu Anh Dũng
 # MSSV: 25520350
 # Lop: Cntt.1
-# Muc dich: Thi nghiem 2 - Tu a = b + c den $t0 = $t1 + $t2 (Ma nguon 2, 3, 4)
+# Muc dich: Thi nghiem 2 - Tu a = b + c den $t0 = $t1 + $t2
+#           Bao gom Ma nguon 3 (firmware cong to dien) va Ma nguon 4 (chuyen cau lenh)
+#           Khong ghi de ket qua cua nhau; chay mac dinh tra ve dung Bang 36
 # ==============================================================================
-
-.data
-    header: .asciiz "--- IT012 LAB 03: THI NGHIEM 2 ---\n"
 
 .text
 .globl main
 main:
-    # --------------------------------------------------------------------------
-    # Ma nguon 2: Phep cong dau tien a = b + c
-    # --------------------------------------------------------------------------
-    addi $t1, $zero, 7       # b = 7
-    addi $t2, $zero, 5       # c = 5
-    add  $t0, $t1, $t2       # a = b + c (12)
-
-    # --------------------------------------------------------------------------
-    # Ma nguon 3: Dien nang tieu thu mot ho gia dinh (so lieu gia lap, kWh)
-    # reading0 -> $s0, reading1 -> $s1, reading2 -> $s2, reading3 -> $s3
-    # --------------------------------------------------------------------------
-    addi $s0, $zero, 1200    # dau thang 1
-    addi $s1, $zero, 1350    # dau thang 2
-    addi $s2, $zero, 1475    # dau thang 3
-    addi $s3, $zero, 1640    # cuoi thang 3
+    # ==========================================================================
+    # PHAN 1: MA NGUON 3 - Dien nang tieu thu mot ho gia dinh (kWh)
+    # Ket qua sau khi thuc thi:
+    #   $s0 = 1200, $s1 = 1350, $s2 = 1475, $s3 = 1640
+    #   $t0 = 150 (usage1), $t1 = 125 (usage2), $t2 = 165 (usage3)
+    #   $t3 = 440 (total)
+    # ==========================================================================
+    addi $s0, $zero, 1200    # reading0: dau thang 1
+    addi $s1, $zero, 1350    # reading1: dau thang 2
+    addi $s2, $zero, 1475    # reading2: dau thang 3
+    addi $s3, $zero, 1640    # reading3: cuoi thang 3
 
     sub  $t0, $s1, $s0       # usage1 = reading1 - reading0 = 1350 - 1200 = 150
     sub  $t1, $s2, $s1       # usage2 = reading2 - reading1 = 1475 - 1350 = 125
@@ -36,9 +31,18 @@ main:
     add  $t3, $t0, $t1       # tong trung gian = 150 + 125 = 275
     add  $t3, $t3, $t2       # total = 275 + 165 = 440
 
-    # --------------------------------------------------------------------------
-    # Ma nguon 4: Chuyen 4 cau lenh thanh hop ngu MIPS (y=8, z=5, w=3)
-    # --------------------------------------------------------------------------
+    # Ket thuc Phan 1 de bao toan nguyen ven trang thai Registers $t0-$t3 cho Bang 36
+    li   $v0, 10
+    syscall
+
+# ==============================================================================
+# PHAN 2: MA NGUON 4 - Chuyen 4 cau lenh thanh hop ngu MIPS (y=8, z=5, w=3)
+# Chay doc lap qua nhan ma_nguon_4 (hoac chay tep examples/m4_source4.asm)
+# Ket qua: $t0 = 16, $t1 = 5, $t2 = 8, $t3 = -3 (0xfffffffd)
+# Su dung thanh ghi tam $t5 thay cho $at de tuan thu chuan thanh ghi MIPS
+# ==============================================================================
+.globl ma_nguon_4
+ma_nguon_4:
     addi $s0, $zero, 8       # y = 8
     addi $s1, $zero, 5       # z = 5
     addi $s2, $zero, 3       # w = 3
@@ -58,6 +62,5 @@ main:
     # x4 = z - y -> $t3 (5 - 8 = -3, bu hai: 0xfffffffd)
     sub  $t3, $s1, $s0
 
-    # Ket thuc chuong trinh
     li   $v0, 10
     syscall

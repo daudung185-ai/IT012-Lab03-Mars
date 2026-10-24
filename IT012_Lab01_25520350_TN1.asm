@@ -5,27 +5,25 @@
 # Ho va ten: Đậu Anh Dũng
 # MSSV: 25520350
 # Lop: Cntt.1
-# Muc dich: Thi nghiem 1 - Lam quen voi thanh ghi, Ma nguon 0 va Ma nguon 1
+# Muc dich: Thi nghiem 1 - Ma nguon 1: Lam quen voi thanh ghi va so bu hai
+#           Dia chi bat dau tai 0x00400000; sau 5 lenh: pc = 0x00400014
 # ==============================================================================
-
-.data
-    msg: .asciiz "Xin chao, MARS!\n"
 
 .text
 .globl main
 main:
-    # --- Ma nguon 0: In chuoi loi chao ---
-    li   $v0, 4              # dich vu 4: in chuoi
-    la   $a0, msg            # doi so: dia chi cua msg
-    syscall
+    # --------------------------------------------------------------------------
+    # 5 lenh dau tien khao sat thanh ghi (MIPS R-type va I-type):
+    # --------------------------------------------------------------------------
+    addi $t0, $zero, 12      # 0x00400000: $t0 = $zero + 12 = 12 (0x0000000c)
+    addi $t1, $zero, 30      # 0x00400004: $t1 = $zero + 30 = 30 (0x0000001e)
+    add  $t2, $t0, $t1       # 0x00400008: $t2 = $t0 + $t1 = 42  (0x0000002a)
+    addi $zero, $zero, 5     # 0x0040000c: $zero noi cung vat ly (hardwired), van giu nguyen 0
+    add  $t3, $zero, $t2     # 0x00400010: $t3 = $zero + $t2 = 42 (0x0000002a)
+                             # Sau khi thuc thi xong 5 lenh tren: pc = 0x00400014
 
-    # --- Ma nguon 1: 5 lenh dau tien khao sat thanh ghi va so am bu 2 ---
-    addi $t0, $zero, 12      # $t0 = $zero + 12
-    addi $t1, $zero, 30      # $t1 = $zero + 30
-    add  $t2, $t0, $t1       # $t2 = $t0 + $t1 (42 = 0x2a)
-    addi $zero, $zero, 5     # thu dua $zero + 5 vao $zero (khong doi, $zero van la 0)
-    add  $t3, $zero, $t2     # $t3 = $zero + $t2 (42 = 0x2a)
-
+    # --------------------------------------------------------------------------
     # Ket thuc chuong trinh
-    li   $v0, 10
+    # --------------------------------------------------------------------------
+    li   $v0, 10             # dich vu syscall 10: ket thuc chuong trinh
     syscall
