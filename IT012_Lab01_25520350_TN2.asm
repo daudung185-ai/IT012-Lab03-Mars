@@ -7,7 +7,8 @@
 # Lop: Cntt.1
 # Muc dich: Thi nghiem 2 - Tu a = b + c den $t0 = $t1 + $t2
 #           Bao gom Ma nguon 3 (firmware cong to dien) va Ma nguon 4 (chuyen cau lenh)
-#           Khong ghi de ket qua cua nhau; chay mac dinh tra ve dung Bang 36
+#           Khong ghi de ket qua cua nhau; chay mac dinh tra ve dung anh Registers Thi nghiem 2
+#           (Luu y: Nguoi cham co the mo truc tiep examples/m4_source4.asm de chay doc lap Ma nguon 4)
 # ==============================================================================
 
 .text
@@ -31,14 +32,15 @@ main:
     add  $t3, $t0, $t1       # tong trung gian = 150 + 125 = 275
     add  $t3, $t3, $t2       # total = 275 + 165 = 440
 
-    # Ket thuc Phan 1 de bao toan nguyen ven trang thai Registers $t0-$t3 cho Bang 36
+    # Ket thuc Phan 1 de bao toan nguyen ven trang thai Registers $t0-$t3 cho anh chup Thi nghiem 2
     li   $v0, 10
     syscall
 
 # ==============================================================================
 # PHAN 2: MA NGUON 4 - Chuyen 4 cau lenh thanh hop ngu MIPS (y=8, z=5, w=3)
-# Chay doc lap qua nhan ma_nguon_4 (hoac chay tep examples/m4_source4.asm)
-# Ket qua: $t0 = 16, $t1 = 5, $t2 = 8, $t3 = -3 (0xfffffffd)
+# De chay doc lap voi nhan main tu dau, mo tep: examples/m4_source4.asm
+# Hoac chay tu nhan ma_nguon_4 trong MARS
+# Ket qua mong doi: $t0 = 16, $t1 = 5, $t2 = 8, $t3 = -3 (0xfffffffd)
 # Su dung thanh ghi tam $t5 thay cho $at de tuan thu chuan thanh ghi MIPS
 # ==============================================================================
 .globl ma_nguon_4
